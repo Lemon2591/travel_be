@@ -1,5 +1,4 @@
-const { where } = require("sequelize");
-const { Post, Website } = require("../models");
+const { Post, Website, Users, Category } = require("../models");
 
 const createPostService = async (data) => {
   const {
@@ -46,11 +45,50 @@ const getPostService = async (key_w, slug, category_id) => {
       slug: slug,
       category_id: category_id,
     },
+    attributes: {
+      exclude: ["is_delete", "updatedAt"],
+    },
+    include: [
+      {
+        model: Users,
+        as: "users",
+        attributes: {
+          exclude: ["password", "createdAt", "updatedAt", "is_delete", "id"],
+        },
+      },
+      {
+        model: Website,
+        as: "website",
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "is_delete", "id"],
+        },
+      },
+      {
+        model: Category,
+        as: "category",
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "is_delete", "id"],
+        },
+      },
+    ],
   });
+  if (!post) {
+    throw new Error("Không có dữ liệu !");
+  }
   return post;
+};
+
+const uploadFileService = async (files) => {
+  for (let item of files) {
+    const filePath = `${process.env.API_SERVER}/storage/${item.filename}`;
+    return {
+      url: filePath,
+    };
+  }
 };
 
 module.exports = {
   createPostService,
   getPostService,
+  uploadFileService,
 };

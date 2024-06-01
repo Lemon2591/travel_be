@@ -18,19 +18,19 @@ class Post extends BaseModel {
     this.belongsTo(Users, {
       foreignKey: "author",
       targetKey: "id",
-      as: "Users",
+      as: "users",
     });
 
     this.belongsTo(Website, {
       foreignKey: "website_id",
       targetKey: "id",
-      as: "Website",
+      as: "website",
     });
 
     this.belongsTo(Category, {
       foreignKey: "category_id",
       targetKey: "id",
-      as: "Category",
+      as: "category",
     });
   }
 }

@@ -10,7 +10,6 @@ const app = express();
 const routers = require("./routes");
 
 // Set up Multer storage and configure the destination folder
-
 // cors middleware
 
 app.use(
@@ -52,7 +51,6 @@ app.use(express.urlencoded({ extended: true }));
 
 //set image storage
 app.use(express.static(path.join(__dirname, "../static")));
-
 app.use(routers);
 
 // app.use(routers);

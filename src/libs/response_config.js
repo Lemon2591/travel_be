@@ -10,6 +10,7 @@ const Response = (handel) => {
         data: data,
       });
     } catch (err) {
+      console.log(err);
       const code = err && err.message ? err.message : ERROR_MESSAGE.ERROR;
       return res.send({
         message: code ? code : ERROR_MESSAGE.ERROR,

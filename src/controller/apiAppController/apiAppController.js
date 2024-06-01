@@ -2,7 +2,6 @@ const { ApiAppService } = require("../../service");
 
 const ApiUpLoadFile = async (req, res) => {
   const files = req.files;
-
   return ApiAppService.uploadFileService(files);
 };
 
