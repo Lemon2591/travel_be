@@ -32,4 +32,8 @@ svRouter.post(
 svRouter.post("/create-post", Response(ApiAppController.createPost));
 svRouter.get("/get-post", Response(ApiAppController.getPost));
 
+svRouter.get("/get-feature-post", Response(ApiAppController.getFeaturePost));
+
+svRouter.get("/get-list-post", Response(ApiAppController.getListPost));
+
 module.exports = svRouter;

@@ -15,8 +15,20 @@ const getPost = async (req, res) => {
   return ApiAppService?.getPostService(key_w, slug, category_id);
 };
 
+const getFeaturePost = async (req, res) => {
+  const { key_w, location } = req.headers;
+  return ApiAppService?.getFeaturePostService(key_w, location);
+};
+
+const getListPost = async (req, res) => {
+  const { page, limit } = req.query;
+  return ApiAppService?.getListPostService(page, limit);
+};
+
 module.exports = {
   ApiUpLoadFile,
   createPost,
   getPost,
+  getFeaturePost,
+  getListPost,
 };

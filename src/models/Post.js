@@ -86,6 +86,16 @@ const attributes = {
     type: DataTypes.INTEGER(10).UNSIGNED,
     allowNull: false,
   },
+  view: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    defaultValue: 0,
+  },
+  source: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    defaultValue: null,
+  },
   is_delete: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
