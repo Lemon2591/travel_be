@@ -14,7 +14,12 @@ const routers = require("./routes");
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5525"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:2509",
+      "http://localhost:5525",
+      "http://54.252.245.182:6688",
+    ],
     credentials: true,
   })
 );
