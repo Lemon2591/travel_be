@@ -19,7 +19,7 @@ app.use(
       "http://localhost:2509",
       "http://localhost:5525",
       "http://54.252.245.182:6688",
-      "http://54.252.245.182:5525",
+      "http://54.252.245.182:2509",
     ],
     credentials: true,
   })
