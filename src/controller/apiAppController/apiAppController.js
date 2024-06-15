@@ -16,8 +16,8 @@ const getPost = async (req, res) => {
 };
 
 const getFeaturePost = async (req, res) => {
-  const { key_w, location } = req.headers;
-  return ApiAppService?.getFeaturePostService(key_w, location);
+  const { key_w, location, category } = req.headers;
+  return ApiAppService?.getFeaturePostService(key_w, location, category);
 };
 
 const getListPost = async (req, res) => {

@@ -14,23 +14,30 @@ class Users extends BaseModel {
     const LoginStatus = require("./LoginStatus");
     const UserRole = require("./UserRole");
     const Post = require("./Post");
+    const UserWebsite = require("./UserWebsite");
 
     this.hasOne(LoginStatus, {
       foreignKey: "user_id",
       targetKey: "id",
-      as: "Users",
+      as: "users",
     });
 
     this.hasOne(UserRole, {
       foreignKey: "user_id",
       targetKey: "id",
-      as: "User_role",
+      as: "user_role",
+    });
+
+    this.hasOne(UserWebsite, {
+      foreignKey: "user_id",
+      targetKey: "id",
+      as: "user_websites",
     });
 
     this.hasOne(Post, {
       foreignKey: "author",
       targetKey: "id",
-      as: "Post",
+      as: "post",
     });
   }
 }

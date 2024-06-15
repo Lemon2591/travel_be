@@ -17,13 +17,13 @@ class UserRole extends BaseModel {
     this.belongsTo(Users, {
       foreignKey: "user_id",
       targetKey: "id",
-      as: "Users",
+      as: "users",
     });
 
     this.belongsTo(Role, {
       foreignKey: "role_id",
       targetKey: "id",
-      as: "Role",
+      as: "role",
     });
   }
 }

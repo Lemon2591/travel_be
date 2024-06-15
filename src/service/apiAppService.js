@@ -75,11 +75,35 @@ const getPostService = async (key_w, slug, category_id) => {
       },
     ],
   });
+
+  const suggest = await Post?.findAll({
+    limit: 4,
+    include: [
+      {
+        model: Category,
+        as: "category",
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "is_delete"],
+        },
+      },
+    ],
+    order: [
+      ["view", "desc"],
+      ["createdAt", "desc"],
+    ],
+  });
   if (!post) {
     throw new Error("Không có dữ liệu !");
   }
 
-  return post;
+  if (!suggest) {
+    throw new Error("Không có dữ liệu !");
+  }
+
+  return {
+    post,
+    suggest,
+  };
 };
 
 const uploadFileService = async (files) => {
@@ -91,7 +115,7 @@ const uploadFileService = async (files) => {
   }
 };
 
-const getFeaturePostService = async (key_w, location) => {
+const getFeaturePostService = async (key_w, location, category) => {
   let where = {
     is_delete: false,
   };
@@ -107,15 +131,28 @@ const getFeaturePostService = async (key_w, location) => {
   if (!key_w) {
     throw new Error("Truy cập bị trừ chối !");
   }
+
+  if (!category) {
+    throw new Error("Truy cập bị trừ chối !");
+  }
+
   const website = await Website.findOne({
     where: {
       key: key_w,
     },
   });
 
+  const category_id = await Category.findOne({
+    where: {
+      slug: category,
+      is_delete: false,
+    },
+  });
+
   const feature = await Post.findAll({
     where: {
       website_id: website?.id,
+      category_id: category_id?.id,
       ...where,
     },
     include: [

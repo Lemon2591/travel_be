@@ -1,4 +1,12 @@
-const { Users, LoginStatus, UserRole, UserStorage } = require("../models");
+const {
+  Users,
+  LoginStatus,
+  UserRole,
+  Role,
+  UserWebsite,
+  Website,
+  Category,
+} = require("../models");
 const {
   generateOTP,
   sendMail,
@@ -220,18 +228,48 @@ const getUser = async (auth_t) => {
         attributes: {
           exclude: ["createdAt", "updatedAt", "id", "user_id"],
         },
+
+        include: [
+          {
+            model: Role,
+            as: "role",
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "id", "is_delete"],
+            },
+          },
+        ],
       },
+    ],
+  });
+
+  const websites = await UserWebsite.findAll({
+    where: {
+      user_id: decoded?.userID,
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt", "user_id", "id"],
+    },
+    include: [
       {
-        model: UserStorage,
-        as: "user_storage",
+        model: Website,
+        as: "websites",
         attributes: {
-          exclude: ["createdAt", "updatedAt", "id", "user_id"],
+          exclude: ["createdAt", "updatedAt", "id", "is_delete"],
         },
       },
     ],
   });
 
-  return user;
+  const category_list = await Category?.findAll({
+    where: {
+      is_delete: false,
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt", "is_delete"],
+    },
+  });
+
+  return { ...user.toJSON(), websites: websites, category_list: category_list };
 };
 
 module.exports = {

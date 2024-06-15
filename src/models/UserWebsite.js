@@ -17,13 +17,13 @@ class UserWebsites extends BaseModel {
     this.belongsTo(Users, {
       foreignKey: "user_id",
       targetKey: "id",
-      as: "Users",
+      as: "users",
     });
 
     this.belongsTo(Website, {
       foreignKey: "website_id",
       targetKey: "id",
-      as: "Websites",
+      as: "websites",
     });
   }
 }

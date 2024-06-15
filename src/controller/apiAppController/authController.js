@@ -35,7 +35,6 @@ const veryOTP = (req, res) => {
 
 const getUser = (req, res) => {
   const { auth_t } = req.cookies;
-
   return AuthService.getUser(auth_t);
 };
 
