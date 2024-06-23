@@ -13,8 +13,8 @@ const createPost = async (req, res) => {
 };
 
 const getPost = async (req, res) => {
-  const { key, slug, category_id } = req.headers;
-  return ApiAppService?.getPostService(key, slug, category_id);
+  const { key, slug, category } = req.headers;
+  return ApiAppService?.getPostService(key, slug, category);
 };
 
 const getFeaturePost = async (req, res) => {

@@ -31,8 +31,8 @@ const createPostService = async (data) => {
   await Post.create({ ...data });
 };
 
-const getPostService = async (key, slug, category_id) => {
-  if (!key || !slug || !category_id) {
+const getPostService = async (key, slug, category) => {
+  if (!key || !slug || !category) {
     throw new Error("Truy cập bị trừ chối !");
   }
   const website = await Website.findOne({
@@ -45,7 +45,7 @@ const getPostService = async (key, slug, category_id) => {
     where: {
       website_id: website?.id,
       slug: slug,
-      category_id: category_id,
+      category_id: category,
       is_delete: false,
     },
     attributes: {
