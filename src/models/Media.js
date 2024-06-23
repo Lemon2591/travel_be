@@ -10,7 +10,14 @@ const { DataTypes } = require("sequelize");
  * @extends {BaseModel}
  */
 class Media extends BaseModel {
-  static association() {}
+  static association() {
+    const User = require("./Users");
+    this.belongsTo(User, {
+      foreignKey: "author",
+      targetKey: "id",
+      as: "user",
+    });
+  }
 }
 /**
  * Attributes model

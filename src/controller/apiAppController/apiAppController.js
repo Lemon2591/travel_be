@@ -3,7 +3,8 @@ const { deToken } = require("../../helper/helper");
 
 const ApiUpLoadFile = async (req, res) => {
   const files = req.files;
-  return ApiAppService.uploadFileService(files);
+  const { data } = req.body;
+  return ApiAppService.uploadFileService(files, data);
 };
 
 const createPost = async (req, res) => {

@@ -1,5 +1,5 @@
-const { Post, Website, Users, Category } = require("../models");
-const { Op, where } = require("sequelize");
+const { Post, Website, Users, Category, Media } = require("../models");
+const { Op } = require("sequelize");
 const { Paging } = require("../helper/helper");
 
 const createPostService = async (data) => {
@@ -106,9 +106,15 @@ const getPostService = async (key_w, slug, category_id) => {
   };
 };
 
-const uploadFileService = async (files) => {
+const uploadFileService = async (files, data) => {
   for (let item of files) {
     const filePath = `${process.env.API_SERVER}/storage/${item.filename}`;
+
+    await Media.create({
+      url: filePath,
+      author: JSON.parse(data)?.author,
+    });
+
     return {
       url: filePath,
     };
