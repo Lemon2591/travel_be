@@ -19,6 +19,7 @@ const getPost = async (req, res) => {
 
 const getFeaturePost = async (req, res) => {
   const { key_w, location, category } = req.headers;
+
   return ApiAppService?.getFeaturePostService(key_w, location, category);
 };
 

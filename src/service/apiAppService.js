@@ -122,6 +122,7 @@ const uploadFileService = async (files, data) => {
 };
 
 const getFeaturePostService = async (key_w, location, category) => {
+  console.log(key_w, location, category);
   let where = {
     is_delete: false,
   };
