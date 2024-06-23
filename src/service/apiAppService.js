@@ -31,13 +31,13 @@ const createPostService = async (data) => {
   await Post.create({ ...data });
 };
 
-const getPostService = async (key_w, slug, category_id) => {
-  if (!key_w || !slug || !category_id) {
+const getPostService = async (key, slug, category_id) => {
+  if (!key || !slug || !category_id) {
     throw new Error("Truy cập bị trừ chối !");
   }
   const website = await Website.findOne({
     where: {
-      key: key_w,
+      key: key,
     },
   });
 
@@ -121,8 +121,8 @@ const uploadFileService = async (files, data) => {
   }
 };
 
-const getFeaturePostService = async (key_w, location, category) => {
-  console.log(key_w, location, category);
+const getFeaturePostService = async (key, location, category) => {
+  console.log(key, location, category);
   let where = {
     is_delete: false,
   };
@@ -135,7 +135,7 @@ const getFeaturePostService = async (key_w, location, category) => {
       },
     };
   }
-  if (!key_w) {
+  if (!key) {
     throw new Error("Truy cập bị trừ chối !");
   }
 
@@ -145,7 +145,7 @@ const getFeaturePostService = async (key_w, location, category) => {
 
   const website = await Website.findOne({
     where: {
-      key: key_w,
+      key: key,
     },
   });
 

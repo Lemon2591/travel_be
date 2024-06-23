@@ -13,14 +13,14 @@ const createPost = async (req, res) => {
 };
 
 const getPost = async (req, res) => {
-  const { key_w, slug, category_id } = req.headers;
-  return ApiAppService?.getPostService(key_w, slug, category_id);
+  const { key, slug, category_id } = req.headers;
+  return ApiAppService?.getPostService(key, slug, category_id);
 };
 
 const getFeaturePost = async (req, res) => {
-  const { key_w, location, category } = req.headers;
+  const { key, location, category } = req.headers;
 
-  return ApiAppService?.getFeaturePostService(key_w, location, category);
+  return ApiAppService?.getFeaturePostService(key, location, category);
 };
 
 const getListPost = async (req, res) => {
