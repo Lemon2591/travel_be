@@ -74,7 +74,9 @@ const loginService = async (user_name, password, ip, response) => {
       : {
           httpOnly: true,
         };
-  response.status(200).cookie("auth_r", refresh_token, config_cookie);
+  response.cookie("auth_t", token, config_cookie);
+  response.cookie("auth_r", refresh_token, config_cookie);
+  response.status(200);
   return token;
 };
 
