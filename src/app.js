@@ -22,6 +22,9 @@ app.use(
       "http://54.252.245.182:2509",
       "http://54.252.245.182:2509",
       "http://3.25.65.222:8879",
+      "https://cms.culturalvn.com",
+      "https://api.culturalvn.com",
+      "https://culturalvn.com",
     ],
     credentials: true,
   })
