@@ -221,10 +221,144 @@ const getListPostService = async (page, limit) => {
   };
 };
 
+const getListPostCMSService = async (
+  page,
+  limit,
+  title,
+  category,
+  view,
+  is_delete
+) => {
+  const paging = Paging(page, limit);
+  let where = {};
+  if (title) {
+    where = {
+      ...where,
+      title: {
+        [Op.like]: `%${title}%`,
+      },
+    };
+  }
+  if (category) {
+    where = { ...where, category_id: category };
+  }
+
+  if (is_delete) {
+    console.log(is_delete);
+    where = { ...where, is_delete: is_delete === "1" ? false : true };
+  }
+
+  const res = await Post.findAll({
+    where: {
+      ...where,
+    },
+    ...paging,
+    attributes: {
+      exclude: ["updatedAt"],
+    },
+    include: [
+      {
+        model: Category,
+        as: "category",
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "is_delete"],
+        },
+      },
+      {
+        model: Users,
+        as: "users",
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "password", "email", "is_delete"],
+        },
+      },
+    ],
+
+    order: [["createdAt", "desc"]],
+  });
+
+  const count = await Post.count({
+    where: {
+      ...where,
+    },
+  });
+
+  const data = view
+    ? res?.sort((a, b) =>
+        view === "1"
+          ? Number(b?.view) - Number(a?.view)
+          : Number(a?.view) - Number(b?.view)
+      )
+    : res;
+
+  return {
+    data: data,
+    total: count,
+    page: Number(page),
+    limit: Number(limit),
+  };
+};
+
+const changeStatusService = async (id, type) => {
+  if (!id || !type) {
+    throw new Error("Truy cập bị trừ chối !");
+  }
+
+  if (type == "restore" || type == "delete") {
+    const res = await Post.update(
+      {
+        is_delete: type === "restore" ? false : true,
+      },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+
+    return res;
+  }
+
+  throw new Error("Truy cập bị trừ chối !");
+};
+
+const detailsPostService = async (userID, id) => {
+  if (!userID || !id || !Number(id)) {
+    throw new Error("Truy cập bị trừ chối !");
+  }
+
+  const res = await Post.findOne({
+    where: {
+      id: id,
+      author: userID,
+      is_delete: false,
+    },
+  });
+  return res;
+};
+
+const updatePostService = async (userID, data) => {
+  if (userID !== data?.author) {
+    throw new Error("Truy cập bị trừ chối !");
+  }
+
+  await Post.update(
+    { ...data },
+    {
+      where: {
+        id: data?.id,
+      },
+    }
+  );
+};
+
 module.exports = {
   createPostService,
   getPostService,
   uploadFileService,
   getFeaturePostService,
   getListPostService,
+  getListPostCMSService,
+  changeStatusService,
+  detailsPostService,
+  updatePostService,
 };

@@ -25,15 +25,42 @@ svRouter.get("/get-user", isAuthApp, Response(AuthController.getUser));
 
 svRouter.post(
   "/upload-file",
+  isAuthApp,
   uploadImageFile.any(),
   Response(ApiAppController.ApiUpLoadFile)
 );
 
-svRouter.post("/create-post", Response(ApiAppController.createPost));
+svRouter.post("/create-post", isAuthApp, Response(ApiAppController.createPost));
 svRouter.get("/get-post", Response(ApiAppController.getPost));
 
 svRouter.get("/get-feature-post", Response(ApiAppController.getFeaturePost));
 
 svRouter.get("/get-list-post", Response(ApiAppController.getListPost));
+
+svRouter.get(
+  "/get-list-post-cms",
+  isAuthApp,
+  Response(ApiAppController.getListPostCMS)
+);
+
+svRouter.get(
+  "/get-list-post-cms",
+  isAuthApp,
+  Response(ApiAppController.getListPostCMS)
+);
+
+svRouter.put(
+  "/change-status-cms/:id",
+  isAuthApp,
+  Response(ApiAppController.changeStatus)
+);
+
+svRouter.get(
+  "/details-post/:id",
+  isAuthApp,
+  Response(ApiAppController.detailsPost)
+);
+
+svRouter.put("/update-post", isAuthApp, Response(ApiAppController.updatePost));
 
 module.exports = svRouter;
