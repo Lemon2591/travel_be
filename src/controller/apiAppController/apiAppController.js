@@ -62,6 +62,11 @@ const updatePost = async (req, res) => {
   return ApiAppService.updatePostService(userID, data);
 };
 
+const getImage = async (req, res) => {
+  const { page, limit } = req.query;
+  return ApiAppService.getImageService(page, limit);
+};
+
 module.exports = {
   ApiUpLoadFile,
   createPost,
@@ -72,4 +77,5 @@ module.exports = {
   changeStatus,
   detailsPost,
   updatePost,
+  getImage,
 };

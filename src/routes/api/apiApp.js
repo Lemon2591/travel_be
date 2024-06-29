@@ -63,4 +63,6 @@ svRouter.get(
 
 svRouter.put("/update-post", isAuthApp, Response(ApiAppController.updatePost));
 
+svRouter.get("/get-image", isAuthApp, Response(ApiAppController.getImage));
+
 module.exports = svRouter;

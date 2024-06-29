@@ -358,6 +358,27 @@ const updatePostService = async (userID, data) => {
   );
 };
 
+const getImageService = async (page, limit) => {
+  const paging = Paging(page, limit);
+
+  const data = await Media.findAll({
+    where: {
+      is_delete: false,
+    },
+    ...paging,
+  });
+
+  const total = await Media?.count({
+    where: {
+      is_delete: false,
+    },
+  });
+  return {
+    data,
+    total,
+  };
+};
+
 module.exports = {
   createPostService,
   getPostService,
@@ -368,4 +389,5 @@ module.exports = {
   changeStatusService,
   detailsPostService,
   updatePostService,
+  getImageService,
 };
