@@ -76,6 +76,20 @@ const getPostService = async (key, slug, category) => {
     ],
   });
 
+  await Post.update(
+    {
+      view: Number(post?.view) + 1,
+    },
+    {
+      where: {
+        website_id: website?.id,
+        slug: slug,
+        category_id: category,
+        is_delete: false,
+      },
+    }
+  );
+
   const suggest = await Post?.findAll({
     limit: 4,
     include: [
