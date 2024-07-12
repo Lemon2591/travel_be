@@ -405,7 +405,7 @@ const getAllPostService = async (key, location, page, limit) => {
   if (location !== "all") {
     where = {
       ...where,
-      slug: {
+      title: {
         [Op.like]: `%${location}%`,
       },
     };
