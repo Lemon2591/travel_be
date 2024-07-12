@@ -136,7 +136,6 @@ const uploadFileService = async (files, data) => {
 };
 
 const getFeaturePostService = async (key, location, category) => {
-  console.log(key, location, category);
   let where = {
     is_delete: false,
   };
@@ -393,16 +392,67 @@ const getImageService = async (page, limit) => {
   };
 };
 
-const getAllPostService = async () => {
+const getAllPostService = async (key, location, page, limit) => {
+  let paging = {};
+  if (page && limit) {
+    paging = Paging(page, limit);
+  }
+
+  let where = {
+    is_delete: false,
+  };
+
+  if (location !== "all") {
+    where = {
+      ...where,
+      slug: {
+        [Op.like]: `%${location}%`,
+      },
+    };
+  }
+  if (!key) {
+    throw new Error("Truy cập bị trừ chối !");
+  }
+
+  const website = await Website.findOne({
+    where: {
+      key: key,
+    },
+  });
+
   const data = await Post.findAll({
     where: {
-      is_delete: false,
+      website_id: website?.id,
+      ...where,
     },
+    ...paging,
+    include: [
+      {
+        model: Category,
+        as: "category",
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "is_delete"],
+        },
+      },
+    ],
     attributes: {
       exclude: ["updatedAt", "is_delete", "id"],
     },
   });
-  return data;
+
+  const count = await Post.count({
+    where: {
+      website_id: website?.id,
+      ...where,
+    },
+  });
+
+  return {
+    data: data,
+    page: Number(page),
+    limit: Number(limit),
+    total: count,
+  };
 };
 
 module.exports = {

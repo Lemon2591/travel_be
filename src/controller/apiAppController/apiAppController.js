@@ -68,7 +68,8 @@ const getImage = async (req, res) => {
 };
 
 const getAllPost = async (req, res) => {
-  return ApiAppService.getAllPostService();
+  const { key, location, page, limit } = req.headers;
+  return ApiAppService.getAllPostService(key, location, page, limit);
 };
 
 module.exports = {
