@@ -65,4 +65,6 @@ svRouter.put("/update-post", isAuthApp, Response(ApiAppController.updatePost));
 
 svRouter.get("/get-image", isAuthApp, Response(ApiAppController.getImage));
 
+svRouter.get("/get-all-post", Response(ApiAppController.getAllPost));
+
 module.exports = svRouter;

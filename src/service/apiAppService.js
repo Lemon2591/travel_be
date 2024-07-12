@@ -393,6 +393,18 @@ const getImageService = async (page, limit) => {
   };
 };
 
+const getAllPostService = async () => {
+  const data = await Post.findAll({
+    where: {
+      is_delete: false,
+    },
+    attributes: {
+      exclude: ["updatedAt", "is_delete", "id"],
+    },
+  });
+  return data;
+};
+
 module.exports = {
   createPostService,
   getPostService,
@@ -404,4 +416,5 @@ module.exports = {
   detailsPostService,
   updatePostService,
   getImageService,
+  getAllPostService,
 };

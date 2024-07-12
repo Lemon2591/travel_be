@@ -67,6 +67,10 @@ const getImage = async (req, res) => {
   return ApiAppService.getImageService(page, limit);
 };
 
+const getAllPost = async (req, res) => {
+  return ApiAppService.getAllPostService();
+};
+
 module.exports = {
   ApiUpLoadFile,
   createPost,
@@ -78,4 +82,5 @@ module.exports = {
   detailsPost,
   updatePost,
   getImage,
+  getAllPost,
 };
