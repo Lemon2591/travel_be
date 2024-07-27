@@ -491,6 +491,8 @@ const getViewService = async (startTime, endTime, website, type) => {
     keyFile: keyFile,
     scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
   });
+
+  console.log(keyFile);
   const client = await auth.getClient();
   // Gửi yêu cầu báo cáo
   const response = await analytics.properties.runReport({
