@@ -1,6 +1,9 @@
-const { Post, Website, Users, Category, Media } = require("../models");
+const { Post, Website, Users, Category, Media, View } = require("../models");
 const { Op } = require("sequelize");
 const { Paging } = require("../helper/helper");
+const moment = require("moment");
+const { google } = require("googleapis");
+const path = require("path");
 
 const createPostService = async (data) => {
   const {
@@ -31,10 +34,11 @@ const createPostService = async (data) => {
   await Post.create({ ...data });
 };
 
-const getPostService = async (key, slug, category) => {
+const getPostService = async (key, slug, category, req) => {
   if (!key || !slug || !category) {
     throw new Error("Truy cập bị trừ chối !");
   }
+
   const website = await Website.findOne({
     where: {
       key: key,
@@ -76,6 +80,10 @@ const getPostService = async (key, slug, category) => {
     ],
   });
 
+  if (!post) {
+    throw new Error("Không có dữ liệu !");
+  }
+
   await Post.update(
     {
       view: Number(post?.view) + 1,
@@ -89,6 +97,27 @@ const getPostService = async (key, slug, category) => {
       },
     }
   );
+
+  const check_first = await View.findOne({
+    where: {
+      createdAt: {
+        [Op.gte]: moment().startOf("days").unix(),
+      },
+      post_id: post?.id,
+    },
+  });
+
+  if (!check_first) {
+    await View.create({
+      view_day: 1,
+      post_id: post?.id,
+      website_id: website?.id,
+    });
+  } else {
+    await check_first.update({
+      view_day: Number(check_first.toJSON()?.view_day) + 1,
+    });
+  }
 
   const suggest = await Post?.findAll({
     limit: 4,
@@ -106,9 +135,6 @@ const getPostService = async (key, slug, category) => {
       ["createdAt", "desc"],
     ],
   });
-  if (!post) {
-    throw new Error("Không có dữ liệu !");
-  }
 
   if (!suggest) {
     throw new Error("Không có dữ liệu !");
@@ -455,6 +481,95 @@ const getAllPostService = async (key, location, page, limit) => {
   };
 };
 
+const getViewService = async (startTime, endTime, website, type) => {
+  if (!website || !startTime || !endTime || !type) {
+    throw new Error("Không có quyền quy cập !");
+  }
+  const analytics = google.analyticsdata("v1beta");
+  const keyFile = path.join(__dirname, `../config/config_google.json`);
+  const auth = new google.auth.GoogleAuth({
+    keyFile: keyFile,
+    scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
+  });
+  const client = await auth.getClient();
+  // Gửi yêu cầu báo cáo
+  const response = await analytics.properties.runReport({
+    property: `properties/448330506`, // Định dạng đúng cho propertyId
+    requestBody: {
+      dimensions: [{ name: "date" }],
+      metrics: [
+        { name: "sessions" },
+        { name: "totalUsers" },
+        { name: "eventCount" },
+      ],
+      dateRanges: [
+        {
+          startDate: moment(startTime).format("YYYY-MM-DD"),
+          endDate: moment(endTime).format("YYYY-MM-DD"),
+        },
+      ],
+    },
+    auth: client,
+  });
+  const rows = response.data.rows || [];
+  // Sắp xếp dữ liệu theo ngày
+  const sortedData = rows
+    .map((row) => ({
+      date: row.dimensionValues[0].value,
+      sessions: row.metricValues[0].value,
+      totalUsers: row.metricValues[1].value,
+      eventCount: row.metricValues[2].value,
+    }))
+    .sort((a, b) => a.date - b.date)
+    .map((el) => {
+      const date = el.date;
+      // Định dạng ngày thành yyyy/mm/dd
+      const formattedDate = `${date.substring(0, 4)}/${date.substring(
+        4,
+        6
+      )}/${date.substring(6, 8)}`;
+      return {
+        date: formattedDate,
+        sessions: el.sessions,
+        totalUsers: el.totalUsers,
+        eventCount: el.eventCount,
+      };
+    });
+
+  let data = {
+    totalUsers: 0,
+    totalEvent: 0,
+    totalSessions: 0,
+    category: [],
+    series_event: {
+      name: "Event",
+      data: [],
+    },
+    series_user: {
+      name: "User",
+      data: [],
+    },
+    series_session: {
+      name: "Session",
+      data: [],
+    },
+  };
+
+  for (let e of sortedData) {
+    data.totalUsers += Number(e?.totalUsers);
+    data.totalEvent += Number(e?.eventCount);
+    data.totalSessions += Number(e?.sessions);
+    data?.category?.push(
+      moment(e?.date).format(type === "week" ? "dddd" : "MMM Do YY")
+    );
+    data?.series_event?.data.push(Number(e?.eventCount));
+    data?.series_user?.data.push(Number(e?.totalUsers));
+    data?.series_session?.data.push(Number(e?.sessions));
+  }
+
+  console.log(data);
+  return data;
+};
 module.exports = {
   createPostService,
   getPostService,
@@ -467,4 +582,5 @@ module.exports = {
   updatePostService,
   getImageService,
   getAllPostService,
+  getViewService,
 };

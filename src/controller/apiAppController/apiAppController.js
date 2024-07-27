@@ -14,7 +14,7 @@ const createPost = async (req, res) => {
 
 const getPost = async (req, res) => {
   const { key, slug, category } = req.headers;
-  return ApiAppService?.getPostService(key, slug, category);
+  return ApiAppService?.getPostService(key, slug, category, req);
 };
 
 const getFeaturePost = async (req, res) => {
@@ -72,6 +72,10 @@ const getAllPost = async (req, res) => {
   return ApiAppService.getAllPostService(key, location, page, limit);
 };
 
+const getView = async (req, res) => {
+  const { startTime, endTime, website, type } = req.body;
+  return ApiAppService.getViewService(startTime, endTime, website, type);
+};
 module.exports = {
   ApiUpLoadFile,
   createPost,
@@ -84,4 +88,5 @@ module.exports = {
   updatePost,
   getImage,
   getAllPost,
+  getView,
 };

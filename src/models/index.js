@@ -6,9 +6,10 @@ const Website = require("./Website");
 const UserWebsite = require("./UserWebsite");
 const Media = require("./Media");
 const Role = require("./Role");
-
 const Category = require("./Category");
 const Post = require("./Post");
+const View = require("./View");
+const Location = require("./Location");
 
 for (const m in sequelize.models) {
   sequelize.models[m].sync();
@@ -29,4 +30,5 @@ module.exports = {
   Role,
   Category,
   Post,
+  View,
 };
